@@ -91,35 +91,36 @@ Instamojo.prototype = {
   payNow: function (data) {
     var self = this;
     return new Promise(function (resolve, reject) {
-      this.httpClient.get(self.newTokenUrl, {}, {}).then(function (res) {
-          // const token = res.data;
-          self.setToken(res.data);
-          // this.instamojoClient.setToken(token);
-          self.createRequest(data).then(function (paymentRequest) {
-            var resp = JSON.parse(paymentRequest.data);
-            const browser = self.iab.create(resp.longurl, "_blank");
-            browser.on("loadstart").subscribe(function (e) {
-              var resultUrl = e.url;
-              if (e.url.indexOf("http://localhost") > -1) {
-                browser.close();
-                var parts = resultUrl.split("?")[1].split("&");
-                var responseMap = {};
-                for (var i = 0; i < parts.length; i++) {
-                  var keyValue = parts[i];
-                  var keyValueParts = keyValue.split("=");
-                  responseMap[keyValueParts[0]] = keyValueParts[1];
-                }
-                self.getPaymentDetails(responseMap["payment_request_id"], responseMap["payment_id"]).then(function (res) {
-                  if (res.data.status) {
-                    resolve(res.data);
-                  } else {
-                    reject(res.data);
-                  }
-                }).catch(reject);
+      self.httpClient.get(self.newTokenUrl, {}, {}).then(function (res) {
+        // const token = res.data;
+        self.setToken(res.data);
+        // this.instamojoClient.setToken(token);
+        data.return_url = "http://localhost";
+        self.createRequest(data).then(function (paymentRequest) {
+          var resp = JSON.parse(paymentRequest.data);
+          const browser = self.iab.create(resp.longurl, "_blank");
+          browser.on("loadstart").subscribe(function (e) {
+            var resultUrl = e.url;
+            if (e.url.indexOf("http://localhost") > -1) {
+              browser.close();
+              var parts = resultUrl.split("?")[1].split("&");
+              var responseMap = {};
+              for (var i = 0; i < parts.length; i++) {
+                var keyValue = parts[i];
+                var keyValueParts = keyValue.split("=");
+                responseMap[keyValueParts[0]] = keyValueParts[1];
               }
-            });
-          }).catch(reject);
+              self.getPaymentDetails(responseMap["payment_request_id"], responseMap["payment_id"]).then(function (res) {
+                if (res.data.status) {
+                  resolve(res.data);
+                } else {
+                  reject(res.data);
+                }
+              }).catch(reject);
+            }
+          });
         }).catch(reject);
+      }).catch(reject);
     });
 
   },
