@@ -5,12 +5,12 @@ function Instamojo(httpClient) {
 	self.env = "production";
 	this.httpClient = httpClient;
 
-	this.setToken = function(token) {
+	this.setToken = function (token) {
 		if (token.indexOf("production") === 0) {
-			token = token.substr(10);
+			self.token = token.substr(10);
 			self.env = "production";
 		} else if (token.indexOf("token") === 0) {
-			token = token.substr(4);
+			self.token = token.substr(4);
 			self.env = "test";
 		}
 	}
@@ -60,18 +60,21 @@ Instamojo.prototype = {
 		}
 	},
 	caller: function (url, method, data, headers) {
-
-	  switch(method.toLowerCase()) {
-      case "get":
-        return this.httpClient.get(url, data, headers);
-        break;
-      case "post":
-        return this.httpClient.post(url, data, headers);
-        break;
-      default:
-        throw "Invalid http method [" + method + "]";
-    }
-  },
+		if (!headers) {
+			headers = {};
+		}
+		headers["Authorization"] = self.token;
+		switch (method.toLowerCase()) {
+			case "get":
+				return this.httpClient.get(url, data, headers);
+				break;
+			case "post":
+				return this.httpClient.post(url, data, headers);
+				break;
+			default:
+				throw "Invalid http method [" + method + "]";
+		}
+	},
 	createRequest: function (data) {
 		var url = this._getBaseUrl() + this.endPoints.create;
 
