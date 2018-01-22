@@ -58,7 +58,7 @@ Instamojo.prototype = {
     }
   },
   caller: function (url, method, data, headers) {
-    let headers = {
+    headers = {
       "Authorization": this.token,
     };
     alert("Headers created: " + JSON.stringify(headers));
