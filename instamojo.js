@@ -1,9 +1,11 @@
 'use strict';
 
-function Instamojo(httpClient) {
+function Instamojo(httpClient, iab, newTokenUrl) {
   var self = this;
   self.env = "production";
   this.httpClient = httpClient;
+  this.iab = iab;
+  this.newTokenUrl = newTokenUrl;
 
   this.endPoints = {
     baseUrl: self._getBaseUrl(),
@@ -24,7 +26,7 @@ function Instamojo(httpClient) {
     'send_sms': '',
     'allow_repeated_payments': '',
     'webhook': '',
-    'redirect_url': '',
+    'redirect_url': ''
   };
   this.refundFields = {
     'payment_id': '',
@@ -46,6 +48,9 @@ Instamojo.prototype = {
       this.token = token.substr(4);
       this.env = "test";
     }
+  },
+  setIab: function (iab) {
+    this.iab = iab;
   },
   _getBaseUrl: function () {
     if (!this.env) {
@@ -82,6 +87,41 @@ Instamojo.prototype = {
       default:
         throw "Invalid http method  [" + method + "]";
     }
+  },
+  payNow: function (data) {
+    var self = this;
+    return new Promise(function (resolve, reject) {
+      this.httpClient.get(self.newTokenUrl, {}, {}).then(function (res) {
+          // const token = res.data;
+          self.setToken(res.data);
+          // this.instamojoClient.setToken(token);
+          self.createRequest(data).then(function (paymentRequest) {
+            var resp = JSON.parse(paymentRequest.data);
+            const browser = self.iab.create(resp.longurl, "_blank");
+            browser.on("loadstart").subscribe(function (e) {
+              var resultUrl = e.url;
+              if (e.url.indexOf("http://localhost") > -1) {
+                browser.close();
+                var parts = resultUrl.split("?")[1].split("&");
+                var responseMap = {};
+                for (var i = 0; i < parts.length; i++) {
+                  var keyValue = parts[i];
+                  var keyValueParts = keyValue.split("=");
+                  responseMap[keyValueParts[0]] = keyValueParts[1];
+                }
+                self.getPaymentDetails(responseMap["payment_request_id"], responseMap["payment_id"]).then(function (res) {
+                  if (res.data.status) {
+                    resolve(res.data);
+                  } else {
+                    reject(res.data);
+                  }
+                }).catch(reject);
+              }
+            });
+          }).catch(reject);
+        }).catch(reject);
+    });
+
   },
   createRequest: function (data) {
     var url = this._getBaseUrl() + this.endPoints.create;
