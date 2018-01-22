@@ -1,21 +1,25 @@
 'use strict';
 
-function Instamojo(token, httpClient) {
+function Instamojo(httpClient) {
 	var self = this;
-	var env = "production";
-	if (token.indexOf("production") === 0) {
-		token = token.substr(10);
-	} else if (token.indexOf("token") === 0) {
-		token = token.substr(4);
-	}
 	this.token = token;
 	this.httpClient = httpClient;
 
+	this.setToken = function(token) {
+		if (token.indexOf("production") === 0) {
+			token = token.substr(10);
+			self.env = "production";
+		} else if (token.indexOf("token") === 0) {
+			token = token.substr(4);
+			self.env = "test";
+		}	
+	}
+
 	this._getBaseUrl = function (env) {
-		if (!env) {
-			env = "test";
+		if (!self.env) {
+			self.env = "test";
 		}
-		if (env == "test") {
+		if (self.env == "test") {
 			return "https://test.instamojo.com/v2/";
 		} else {
 			return "https://api.instamojo.com/v2/";
