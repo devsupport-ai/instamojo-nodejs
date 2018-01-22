@@ -93,7 +93,7 @@ Instamojo.prototype = {
     return this.caller(url, 'get');
   },
   getPaymentDetails: function (requestId, paymentId) {
-    var url = this._getBaseUrl() + this.endPoints.paymentStatus + requestId + '/' + paymentId + '/';
+    var url = this._getBaseUrl() + "payments/" + paymentId + '/';
     return this.caller(url, 'get');
   },
   getAllPaymentRequests: function () {
