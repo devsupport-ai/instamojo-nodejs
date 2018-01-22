@@ -59,11 +59,22 @@ Instamojo.prototype = {
 			return "https://api.instamojo.com/v2/";
 		}
 	},
-	caller: function (url, method, data) {
-		return this.http[method](url, data, {})
-	},
+	caller: function (url, method, data, headers) {
+
+	  switch(method.toLowerCase()) {
+      case "get":
+        return this.http.get(url, data, headers);
+        break;
+      case "post":
+        return this.http.post(url, data, headers);
+        break;
+      default:
+        throw "Invalid http method [" + method + "]";
+    }
+  },
 	createRequest: function (data) {
 		var url = this._getBaseUrl() + this.endPoints.create;
+
 		return this.caller(url, 'post', data);
 	},
 	getRequestDetails: function (requestId) {
