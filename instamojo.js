@@ -61,8 +61,8 @@ Instamojo.prototype = {
     headers = {
       "Authorization": "Bearer " + this.token,
     };
-    alert("Headers created: " + JSON.stringify(headers));
-    alert("Http client request [" + method + "]");
+    // alert("Headers created: " + JSON.stringify(headers));
+    // alert("Http client request [" + method + "]");
     switch (method.toLowerCase()) {
       case "get":
         return this.httpClient.get(url, data, headers);
@@ -85,7 +85,7 @@ Instamojo.prototype = {
   },
   createRequest: function (data) {
     var url = this._getBaseUrl() + this.endPoints.create;
-    alert("Created payment request url: " + url);
+    // alert("Created payment request url: " + url);
     return this.caller(url, 'post', data);
   },
   getRequestDetails: function (requestId) {
