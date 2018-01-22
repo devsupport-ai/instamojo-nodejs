@@ -70,6 +70,15 @@ Instamojo.prototype = {
       case "post":
         return this.httpClient.post(url, data, headers);
         break;
+      case "put":
+        return this.httpClient.put(url, data, headers);
+        break;
+      case "patch":
+        return this.httpClient.patch(url, data, headers);
+        break;
+      case "delete":
+        return this.httpClient.delete(url, data, headers);
+        break;
       default:
         throw "Invalid http method  [" + method + "]";
     }
