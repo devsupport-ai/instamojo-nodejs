@@ -111,10 +111,11 @@ Instamojo.prototype = {
                 responseMap[keyValueParts[0]] = keyValueParts[1];
               }
               self.getPaymentDetails(responseMap["payment_request_id"], responseMap["payment_id"]).then(function (res) {
-                if (res.data.status) {
-                  resolve(res.data);
+                var response = JSON.parse(res.data);
+                if (response.status) {
+                  resolve(response);
                 } else {
-                  reject(res.data);
+                  reject(response);
                 }
               }).catch(reject);
             }
