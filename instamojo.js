@@ -12,21 +12,11 @@ function Instamojo(httpClient) {
 		} else if (token.indexOf("token") === 0) {
 			token = token.substr(4);
 			self.env = "test";
-		}	
+		}
 	}
 
-	this._getBaseUrl = function (env) {
-		if (!self.env) {
-			self.env = "test";
-		}
-		if (self.env == "test") {
-			return "https://test.instamojo.com/v2/";
-		} else {
-			return "https://api.instamojo.com/v2/";
-		}
-	};
 	this.endPoints = {
-		baseUrl: self._getBaseUrl(self.env),
+		baseUrl: self._getBaseUrl(),
 		create: 'payment_requests/',
 		paymentStatus: 'payment_requests/',
 		links: 'links/',
@@ -59,35 +49,45 @@ function Instamojo(httpClient) {
 }
 Instamojo.prototype = {
 
+	_getBaseUrl: function () {
+		if (!this.env) {
+			this.env = "test";
+		}
+		if (this.env == "test") {
+			return "https://test.instamojo.com/v2/";
+		} else {
+			return "https://api.instamojo.com/v2/";
+		}
+	},
 	caller: function (url, method, data) {
-		return self.http[method](url, data, {})
+		return this.http[method](url, data, {})
 	},
 	createRequest: function (data) {
-		var url = BASE_URL + ENDPOINTS.CREATE;
+		var url = this._getBaseUrl() + ENDPOINTS.CREATE;
 		return this.caller(url, 'post', data);
 	},
 	getRequestDetails: function (requestId) {
-		var url = BASE_URL + ENDPOINTS.PAYMENT_STATUS + requestId + '/';
+		var url = this._getBaseUrl() + ENDPOINTS.PAYMENT_STATUS + requestId + '/';
 		return this.caller(url, 'get');
 	},
 	getPaymentDetails: function (requestId, paymentId) {
-		var url = BASE_URL + ENDPOINTS.PAYMENT_STATUS + requestId + '/' + paymentId + '/';
+		var url = this._getBaseUrl() + ENDPOINTS.PAYMENT_STATUS + requestId + '/' + paymentId + '/';
 		return this.caller(url, 'get');
 	},
 	getAllPaymentRequests: function () {
-		var url = BASE_URL + ENDPOINTS.PAYMENT_STATUS;
+		var url = this._getBaseUrl() + ENDPOINTS.PAYMENT_STATUS;
 		return this.caller(url, 'get');
 	},
 	createRefund: function (refundData) {
-		var url = BASE_URL + ENDPOINTS.REFUNDS;
+		var url = this._getBaseUrl() + ENDPOINTS.REFUNDS;
 		return this.caller(url, 'post', refundData);
 	},
 	getAllRefunds: function () {
-		var url = BASE_URL + ENDPOINTS.REFUNDS;
+		var url = this._getBaseUrl() + ENDPOINTS.REFUNDS;
 		return this.caller(url, 'get');
 	},
 	getRefundDetails: function (refundId) {
-		var url = BASE_URL + ENDPOINTS.REFUNDS + refundId + '/'
+		var url = this._getBaseUrl() + ENDPOINTS.REFUNDS + refundId + '/'
 		return this.caller(url, 'get');
 	},
 	refundFields: function () {
