@@ -63,31 +63,31 @@ Instamojo.prototype = {
 		return this.http[method](url, data, {})
 	},
 	createRequest: function (data) {
-		var url = this._getBaseUrl() + ENDPOINTS.CREATE;
+		var url = this._getBaseUrl() + this.endPoints.create;
 		return this.caller(url, 'post', data);
 	},
 	getRequestDetails: function (requestId) {
-		var url = this._getBaseUrl() + ENDPOINTS.PAYMENT_STATUS + requestId + '/';
+		var url = this._getBaseUrl() + this.endPoints.paymentStatus + requestId + '/';
 		return this.caller(url, 'get');
 	},
 	getPaymentDetails: function (requestId, paymentId) {
-		var url = this._getBaseUrl() + ENDPOINTS.PAYMENT_STATUS + requestId + '/' + paymentId + '/';
+		var url = this._getBaseUrl() + this.endPoints.paymentStatus + requestId + '/' + paymentId + '/';
 		return this.caller(url, 'get');
 	},
 	getAllPaymentRequests: function () {
-		var url = this._getBaseUrl() + ENDPOINTS.PAYMENT_STATUS;
+		var url = this._getBaseUrl() + this.endPoints.paymentStatus;
 		return this.caller(url, 'get');
 	},
 	createRefund: function (refundData) {
-		var url = this._getBaseUrl() + ENDPOINTS.REFUNDS;
+		var url = this._getBaseUrl() + this.endPoints.refund;
 		return this.caller(url, 'post', refundData);
 	},
 	getAllRefunds: function () {
-		var url = this._getBaseUrl() + ENDPOINTS.REFUNDS;
+		var url = this._getBaseUrl() + this.endPoints.refund;
 		return this.caller(url, 'get');
 	},
 	getRefundDetails: function (refundId) {
-		var url = this._getBaseUrl() + ENDPOINTS.REFUNDS + refundId + '/'
+		var url = this._getBaseUrl() + this.endPoints.refund + refundId + '/'
 		return this.caller(url, 'get');
 	},
 	refundFields: function () {
