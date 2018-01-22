@@ -1,1 +1,1 @@
-# instamojo
+# Instamojo v2 API wrapper for node js
