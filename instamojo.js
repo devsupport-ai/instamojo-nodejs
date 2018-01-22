@@ -42,7 +42,7 @@ Instamojo.prototype = {
     if (token.indexOf("production") === 0) {
       this.token = token.substr(10);
       this.env = "production";
-    } else if (token.indexOf("token") === 0) {
+    } else if (token.indexOf("test") === 0) {
       this.token = token.substr(4);
       this.env = "test";
     }
