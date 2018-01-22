@@ -26,7 +26,7 @@ function Instamojo(httpClient) {
 		}
 	};
 	this.endPoints = {
-		baseUrl: self._getBaseUrl(env),
+		baseUrl: self._getBaseUrl(self.env),
 		create: 'payment_requests/',
 		paymentStatus: 'payment_requests/',
 		links: 'links/',
