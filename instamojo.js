@@ -63,10 +63,10 @@ Instamojo.prototype = {
 
 	  switch(method.toLowerCase()) {
       case "get":
-        return this.http.get(url, data, headers);
+        return this.httpClient.get(url, data, headers);
         break;
       case "post":
-        return this.http.post(url, data, headers);
+        return this.httpClient.post(url, data, headers);
         break;
       default:
         throw "Invalid http method [" + method + "]";
