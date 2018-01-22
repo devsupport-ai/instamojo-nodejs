@@ -55,6 +55,7 @@ function Instamojo(httpClient) {
 		'body': '',
 		'refund_amount': ''
 	};
+	return self;
 }
 Instamojo.prototype = {
 
@@ -92,7 +93,7 @@ Instamojo.prototype = {
 	refundFields: function () {
 		return this.refundFields;
 	},
-	paymentFields: function () {
+	getPaymentFields: function () {
 		return this.paymentFields;
 	},
 	setWebHook: function (url) {
