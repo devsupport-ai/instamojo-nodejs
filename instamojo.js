@@ -2,7 +2,6 @@
 
 function Instamojo(httpClient) {
 	var self = this;
-	this.token = token;
 	this.httpClient = httpClient;
 
 	this.setToken = function(token) {
